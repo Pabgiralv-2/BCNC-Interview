@@ -158,7 +158,7 @@ public class PriceControllerTest {
 
     // Test checking that the exception 400 is managed properly
     @Test
-    void testGetPriceInfoByParams_BadRequest() throws Exception {
+    void testGetPriceInfoByParams_BadRequest_invalidParam() throws Exception {
 
         String wrongDate = "2020-06-14T16:00:0"; //Its missing one 0 at the end
 
@@ -168,6 +168,19 @@ public class PriceControllerTest {
                         .param("brandId", String.valueOf(1)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Failed to convert 'applicationDate' with value: '2020-06-14T16:00:0'"))
+                .andExpect(jsonPath("$.title").value("400 BAD_REQUEST"));
+    }
+
+    // Test checking that the exception 400 is managed properly
+    @Test
+    void testGetPriceInfoByParams_BadRequest_nullParam() throws Exception {
+
+        mockMvc.perform(get("/products/search")
+                        .param("applicationDate", String.valueOf(""))
+                        .param("productId", String.valueOf(35455L))
+                        .param("brandId", String.valueOf(1)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Required parameter 'applicationDate' is not present."))
                 .andExpect(jsonPath("$.title").value("400 BAD_REQUEST"));
     }
 }
