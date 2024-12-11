@@ -32,15 +32,12 @@ public class PriceControllerTest {
     // Test 1: petición a las 10:00 del día 14 del producto 35455 para la brand 1 (ZARA)
     @Test
     void test1() throws Exception {
-        GetPriceInfoRequest request = new GetPriceInfoRequest();
         LocalDateTime applicationDate = LocalDateTime.of(2020,6,14,10,0,0);
-        request.setApplicationDate(applicationDate);
-        request.setProductId(35455L);
-        request.setBrandId(1L);
 
         mockMvc.perform(get("/products/search")
-                        .contentType("application/json")
-                        .content(objectMapper.writeValueAsString(request)))
+                        .param("applicationDate", String.valueOf(applicationDate))
+                        .param("productId", String.valueOf(35455L))
+                        .param("brandId", String.valueOf(1L)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.priceList").value(1L))
                 .andExpect(jsonPath("$.productId").value(35455L))
@@ -54,15 +51,12 @@ public class PriceControllerTest {
     // Test 2: petición a las 16:00 del día 14 del producto 35455 para la brand 1 (ZARA)
     @Test
     void test2() throws Exception {
-        GetPriceInfoRequest request = new GetPriceInfoRequest();
         LocalDateTime applicationDate = LocalDateTime.of(2020,6,14,16,0,0);
-        request.setApplicationDate(applicationDate);
-        request.setProductId(35455L);
-        request.setBrandId(1L);
 
         mockMvc.perform(get("/products/search")
-                        .contentType("application/json")
-                        .content(objectMapper.writeValueAsString(request)))
+                        .param("applicationDate", String.valueOf(applicationDate))
+                        .param("productId", String.valueOf(35455L))
+                        .param("brandId", String.valueOf(1L)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.priceList").value(2L))
                 .andExpect(jsonPath("$.productId").value(35455L))
@@ -76,15 +70,12 @@ public class PriceControllerTest {
     // Test 3: petición a las 21:00 del día 14 del producto 35455 para la brand 1 (ZARA)
     @Test
     void test3() throws Exception {
-        GetPriceInfoRequest request = new GetPriceInfoRequest();
         LocalDateTime applicationDate = LocalDateTime.of(2020,6,14,21,0,0);
-        request.setApplicationDate(applicationDate);
-        request.setProductId(35455L);
-        request.setBrandId(1L);
 
         mockMvc.perform(get("/products/search")
-                        .contentType("application/json")
-                        .content(objectMapper.writeValueAsString(request)))
+                        .param("applicationDate", String.valueOf(applicationDate))
+                        .param("productId", String.valueOf(35455L))
+                        .param("brandId", String.valueOf(1L)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.priceList").value(1L))
                 .andExpect(jsonPath("$.productId").value(35455L))
@@ -98,15 +89,12 @@ public class PriceControllerTest {
     // Test 4: petición a las 10:00 del día 15 del producto 35455 para la brand 1 (ZARA)
     @Test
     void test4() throws Exception {
-        GetPriceInfoRequest request = new GetPriceInfoRequest();
         LocalDateTime applicationDate = LocalDateTime.of(2020,6,15,10,0,0);
-        request.setApplicationDate(applicationDate);
-        request.setProductId(35455L);
-        request.setBrandId(1L);
 
         mockMvc.perform(get("/products/search")
-                        .contentType("application/json")
-                        .content(objectMapper.writeValueAsString(request)))
+                        .param("applicationDate", String.valueOf(applicationDate))
+                        .param("productId", String.valueOf(35455L))
+                        .param("brandId", String.valueOf(1L)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.priceList").value(3L))
                 .andExpect(jsonPath("$.productId").value(35455L))
@@ -120,15 +108,12 @@ public class PriceControllerTest {
     // Test 5: petición a las 21:00 del día 16 del producto 35455 para la brand 1 (ZARA)
     @Test
     void test5() throws Exception {
-        GetPriceInfoRequest request = new GetPriceInfoRequest();
         LocalDateTime applicationDate = LocalDateTime.of(2020,6,16,21,0,0);
-        request.setApplicationDate(applicationDate);
-        request.setProductId(35455L);
-        request.setBrandId(1L);
 
         mockMvc.perform(get("/products/search")
-                        .contentType("application/json")
-                        .content(objectMapper.writeValueAsString(request)))
+                        .param("applicationDate", String.valueOf(applicationDate))
+                        .param("productId", String.valueOf(35455L))
+                        .param("brandId", String.valueOf(1L)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.priceList").value(4L))
                 .andExpect(jsonPath("$.productId").value(35455L))
@@ -143,17 +128,13 @@ public class PriceControllerTest {
     @Test
     void testGetPriceInfoByParams_NotFound() throws Exception {
 
-        // Request with data that does not exit on DB
-        GetPriceInfoRequest request = new GetPriceInfoRequest();
-        request.setApplicationDate(LocalDateTime.now());
-        request.setProductId(99999L);
-        request.setBrandId(99L);
-
         PriceNotFoundException priceNotFoundException = new PriceNotFoundException();
 
+        // Request with data that does not exit on DB
         mockMvc.perform(get("/products/search")
-                        .contentType("application/json")
-                        .content(objectMapper.writeValueAsString(request)))
+                        .param("applicationDate", String.valueOf(LocalDateTime.now()))
+                        .param("productId", String.valueOf(35455L))
+                        .param("brandId", String.valueOf(1L)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(priceNotFoundException.getMessage()))
                 .andExpect(jsonPath("$.code").value(priceNotFoundException.getCode()));
