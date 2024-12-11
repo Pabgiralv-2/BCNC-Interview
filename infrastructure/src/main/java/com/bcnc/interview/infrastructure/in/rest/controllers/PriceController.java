@@ -5,10 +5,10 @@ import com.bcnc.interview.domain.model.Price;
 
 import com.bcnc.interview.infrastructure.out.dtos.GetPriceInfoResponse;
 import com.bcnc.interview.infrastructure.common.PriceDtoMapper;
+import com.bcnc.interview.infrastructure.out.exceptions.NegativeValueNotAllowedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/products")
-@Validated
 public class PriceController {
 
     private final FindPriceUseCase findProductsUseCase;
@@ -28,6 +27,12 @@ public class PriceController {
     public ResponseEntity<GetPriceInfoResponse> getPriceInfoByParams(@RequestParam LocalDateTime applicationDate,
                                                                      @RequestParam Long productId,
                                                                      @RequestParam Long brandId) {
+
+        if(productId <= 0){
+            throw new NegativeValueNotAllowedException("productId");
+        } else if (brandId <= 0){
+            throw new NegativeValueNotAllowedException("brandId");
+        }
 
         Price price = findProductsUseCase.getPriceInfoByParams(applicationDate, productId, brandId);
 
